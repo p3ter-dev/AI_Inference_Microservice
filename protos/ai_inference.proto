@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package ai_inference;
+
+// Message Definitions
+
+// Task 2 – Unary: Sentiment Analysis
+message SentimentRequest {
+  string text = 1;
+}
+
+message SentimentResponse {
+  string label      = 1;   // e.g. "POSITIVE", "NEGATIVE", "NEUTRAL"
+  float  confidence = 2;   // 0.0 – 1.0
+  string reasoning  = 3;   // short explanation from the model
+}
+
+// Task 3 – Server-Streaming: Real-time LLM Generation
+message GenerationRequest {
+  string prompt = 1;
+}
+
+message GenerationChunk {
+  string token = 1;   // one streamed chunk / token
+}
+
+// Task 4 – Client-Streaming: Batch Summarization
+message TextChunk {
+  string content    = 1;
+  int32  chunk_index = 2;
+}
+
+message SummaryResponse {
+  string summary       = 1;
+  int32  chunks_received = 2;
+}
+
+// Task 5 – Bidirectional-Streaming: Live Chat
+message ChatMessage {
+  string role    = 1;   // "user" | "assistant"
+  string content = 2;
+  string turn_id = 3;   // echoed back so client can match responses
+}
+
+// Service Definition
+
+service AIInference {
+  // Task 2 – Unary
+  rpc AnalyzeSentiment (SentimentRequest) returns (SentimentResponse);
+
+  // Task 3 – Server-Streaming
+  rpc GenerateText (GenerationRequest) returns (stream GenerationChunk);
+
+  // Task 4 – Client-Streaming
+  rpc SummarizeDocument (stream TextChunk) returns (SummaryResponse);
+
+  // Task 5 – Bidirectional-Streaming
+  rpc LiveChat (stream ChatMessage) returns (stream ChatMessage);
+}
