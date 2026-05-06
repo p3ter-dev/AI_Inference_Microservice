@@ -1,0 +1,83 @@
+# AI Inference Microservice – Docker Compose Mesh
+#
+# Topology:
+#   client ──► nginx:80 (HTTP/2 grpc_pass, Round Robin)
+#                  ├──► grpc_server_1:50051
+#                  ├──► grpc_server_2:50051
+#                  └──► grpc_server_3:50051
+
+x-server-common: &server-common
+  build:
+    context: .
+    dockerfile: server/Dockerfile
+  env_file:
+    - .env
+  restart: unless-stopped
+  networks:
+    - ai_mesh
+  healthcheck:
+    test: [ "CMD", "python", "-c", "import grpc; ch=grpc.insecure_channel('localhost:50051'); grpc.channel_ready_future(ch).result(timeout=4)" ]
+    interval: 10s
+    timeout: 5s
+    retries: 3
+
+services:
+
+  # Backend replicas
+  grpc_server_1:
+    <<: *server-common
+    container_name: grpc_server_1
+    environment:
+      - GRPC_PORT=50051
+
+  grpc_server_2:
+    <<: *server-common
+    container_name: grpc_server_2
+    environment:
+      - GRPC_PORT=50051
+
+  grpc_server_3:
+    <<: *server-common
+    container_name: grpc_server_3
+    environment:
+      - GRPC_PORT=50051
+
+  # Nginx Layer 7 Load Balancer
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: ai_nginx
+    ports:
+      - "80:80" # gRPC clients connect here
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      grpc_server_1:
+        condition: service_healthy
+      grpc_server_2:
+        condition: service_healthy
+      grpc_server_3:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ai_mesh
+
+  # CLI Tester (runs once and exits)
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    container_name: ai_client
+    env_file:
+      - .env
+    environment:
+      - GRPC_TARGET=nginx:80
+    depends_on:
+      - nginx
+    networks:
+      - ai_mesh
+    profiles:
+      - test # only run with: docker compose --profile test up client
+
+networks:
+  ai_mesh:
+    driver: bridge
