@@ -1,0 +1,34 @@
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# gRPC proto cache
+*.pb.py
+*.grpc.pb.py
+protos/__init__.py
+
+# Large data files
+*.pkl
+*.json
+
+# Logs
+logs/
+*.log
+
+# Docker
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# Testing
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
