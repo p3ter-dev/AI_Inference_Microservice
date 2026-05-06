@@ -21,9 +21,8 @@ import ai_inference_pb2_grpc as pb2_grpc
 
 import google.generativeai as genai
 
-# ──────────────────────────────────────────────
+
 #  Configuration
-# ──────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s – %(message)s",
@@ -67,12 +66,12 @@ async def _gemini_generate(prompt: str, stream: bool = False):
         yield response.text
 
 
-#  BONUS: Auth Server Interceptor
+# Auth Server Interceptor
 
 class AuthInterceptor(grpc.aio.ServerInterceptor):
     """
     Validates the 'Authorization: Bearer <key>' metadata on every call.
-    Rejects with UNAUTHENTICATED if missing or wrong – never reaches service logic.
+    Rejects with UNAUTHENTICATED if missing or wrong; never reaches service logic.
     """
 
     def __init__(self, valid_key: str):
