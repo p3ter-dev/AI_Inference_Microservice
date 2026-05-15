@@ -33,7 +33,7 @@ A production-grade gRPC microservice that exposes **all four gRPC communication 
 ## Project Structure
 
 ```
-ai_inference_microservice/
+AI_Inference_Microservice/
 ├── protos/
 │   └── ai_inference.proto          ← API contract (source of truth)
 ├── server/
