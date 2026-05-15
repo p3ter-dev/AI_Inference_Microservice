@@ -67,8 +67,8 @@ ai_inference_microservice/
 ### 1. Clone & Configure
 
 ```bash
-git clone <repo-url>
-cd ai-inference-microservice
+git clone https://github.com/p3ter-dev/AI_Inference_Microservice
+cd AI_Inference_Microservice
 
 # Create a .env file (never commit this)
 cat > .env <<EOF
