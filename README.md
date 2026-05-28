@@ -44,10 +44,9 @@ git clone https://github.com/p3ter-dev/AI_Inference_Microservice
 cd AI_Inference_Microservice
 
 # Create a .env file (never commit this)
-cat > .env <<EOF
+cat > .env
 GEMINI_API_KEY=your_gemini_api_key_here
-API_SECRET_KEY=my-secret-key
-EOF
+API_SECRET_KEY=secret-key
 ```
 
 ### 2. (Optional) Regenerate Protobuf Stubs
