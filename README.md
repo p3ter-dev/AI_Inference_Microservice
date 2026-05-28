@@ -30,33 +30,6 @@ A production-grade gRPC microservice that exposes **all four gRPC communication 
 
 ---
 
-## Project Structure
-
-```
-AI_Inference_Microservice/
-├── protos/
-│   └── ai_inference.proto          ← API contract (source of truth)
-├── server/
-│   ├── server.py                   ← gRPC server (all 4 RPC types + interceptor)
-│   ├── ai_inference_pb2.py         ← generated (run `make proto`)
-│   ├── ai_inference_pb2_grpc.py    ← generated
-│   ├── requirements.txt
-│   └── Dockerfile
-├── client/
-│   ├── client.py                   ← CLI tester (all 4 RPC types)
-│   ├── ai_inference_pb2.py         ← generated
-│   ├── ai_inference_pb2_grpc.py    ← generated
-│   ├── requirements.txt
-│   └── Dockerfile
-├── nginx/
-│   └── nginx.conf                  ← HTTP/2 + grpc_pass + upstream block
-├── docker-compose.yml
-├── Makefile
-└── README.md
-```
-
----
-
 ## Quick Start
 
 ### Prerequisites
